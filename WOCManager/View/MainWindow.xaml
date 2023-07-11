@@ -1,0 +1,65 @@
+﻿<Window x:Class="WOCManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WOCManager"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="Foreground" Value="#FFB4B4B5"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Foreground" Value="#FFD2D1D1"/>
+            <Setter Property="Background" Value="#FF9B47AF"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Margin" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="20">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF7E2288"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>                    
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black"/>
+                <GradientStop Color="#FF4A386D" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.8*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="0.5*"/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" Grid.Column="0"/>
+        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+            <TextBlock Text="White"/>
+            <TextBlock Text="Owl"/>
+            <TextBlock Text="Cards"/>
+            <TextBlock Text="Manager"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Категории"/>
+            <Button Content="Слова"/>
+        </StackPanel>
+    </Grid>
+</Window>
