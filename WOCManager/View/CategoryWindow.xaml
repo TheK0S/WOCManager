@@ -4,9 +4,83 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WOCManager.View"
+        xmlns:controller="clr-namespace:WOCManager.Controller"
         mc:Ignorable="d"
         Title="CategoryWindow" Height="450" Width="800">
+    <Window.Resources>
+        <controller:LevelIdToLevelNameConverter x:Key="LevelIdToLevelNameConverter"/>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0 10 0 0"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style TargetType="TextBox">
+            
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#FF9B47AF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Padding="5" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="15">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF7E2288"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black"/>
+                <GradientStop Color="#FF4A386D" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>            
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Border  Grid.Row="1" Grid.Column="1" Width="440" Height="22" CornerRadius="10" Background="White">
+            <StackPanel Orientation="Horizontal" Margin="10 0">
+                <Image Source="/View/search.png" Width="20" Height="12"/>
+                <TextBox Width="400" BorderThickness="0" Margin="0 2 0 0"/>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="20">
+            <TextBlock Text="Уровень языка"/>
+            <ComboBox/>
+            <TextBlock Text="Название категории"/>
+            <TextBox Margin="0 0 0 10"/>
+            <Button Content="Добавить"/>
+            <Button Content="Изменить"/>
+            <Button Content="Удалить"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" Grid.Column="1" Margin="10"
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding Categories}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Уровень" Binding="{Binding LevelsId, Converter={StaticResource LevelIdToLevelNameConverter}}" Width="150"/>
+                <DataGridTextColumn Header="Имя категории" Binding="{Binding CategoriesName}" Width="1*"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

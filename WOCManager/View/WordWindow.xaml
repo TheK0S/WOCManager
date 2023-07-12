@@ -4,9 +4,111 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WOCManager.View"
+        xmlns:controller="clr-namespace:WOCManager.Controller"
         mc:Ignorable="d"
-        Title="WordWindow" Height="450" Width="800">
+        Title="WordWindow" Height="600" Width="1200">
+    <Window.Resources>
+        <controller:ByteArrayToBitmapSourceConverter x:Key="ByteArrayToBitmapSourceConverter"/>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0 10 0 0"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style TargetType="TextBox">
+
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#FF9B47AF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Padding="5" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="15">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF7E2288"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black"/>
+                <GradientStop Color="#FF4A386D" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="450"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Border  Grid.Row="1" Grid.Column="1" Width="440" Height="22" CornerRadius="10" Background="White">
+            <StackPanel Orientation="Horizontal" Margin="10 0">
+                <Image Source="/View/search.png" Width="20" Height="12"/>
+                <TextBox Width="400" BorderThickness="0" Margin="0 2 0 0"/>
+            </StackPanel>
+        </Border>
         
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="20 0" Height="20">
+            <TextBlock Text="Категория" Margin="0 0 20 0"/>
+            <ComboBox Width="200"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="2" Grid.Column="0" Margin="20">
+            <TextBlock Text="Слово"/>
+            <TextBox/>
+            <TextBlock Text="Перевод слова"/>
+            <TextBox/>
+            <TextBlock Text="Транскрипция"/>
+            <TextBox/>
+            <TextBlock Text="Предложение"/>
+            <TextBox/>
+            <TextBlock Text="Перевод предложения"/>
+            <TextBox/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Height="250" Width="250" Margin="0 20 25 0" Source="/View/default_picture.png"/>
+                <StackPanel>
+                    <Button Content="Изображение" Margin="0 20 0 45"/>
+                    <Button Content="Добавить" Width="130" Margin="0 0 0 20"/>
+                    <Button Content="Редактировать" Width="130" Margin="0 0 0 20"/>
+                    <Button Content="Удалить" Width="130"/>
+                </StackPanel>
+            </StackPanel>            
+            
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" Grid.Column="1" Margin="10"
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False"
+                  IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Категория" Binding="{Binding CategoryName}"/>
+                <DataGridTextColumn Header="Слово" Binding="{Binding Words}"/>
+                <DataGridTextColumn Header="Транскрипция" Binding="{Binding Transcriptions}"/>
+                <DataGridTextColumn Header="Предложение" Binding="{Binding Sentence}"/>
+                <DataGridTextColumn Header="Перевод слова" Binding="{Binding TranslateWords}"/>
+                <DataGridTextColumn Header="Перевод предложения" Binding="{Binding TransSentence}"/>
+                <DataGridTextColumn Header="Is completed" Binding="{Binding Is_completed}"/>
+                <DataGridTemplateColumn Header="Картинка">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Picture, Converter={StaticResource ByteArrayToBitmapSourceConverter}}" Width="30" Height="30"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

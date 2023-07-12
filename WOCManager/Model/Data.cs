@@ -15,7 +15,7 @@ using Svg;
 using System.IO;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
-
+using System.Collections.ObjectModel;
 
 namespace WOCManager.Model
 {
@@ -24,54 +24,54 @@ namespace WOCManager.Model
         static string connectionString = @"Data Source=SQL5110.site4now.net;Initial Catalog=db_a9a0f7_diplomawork;User Id=db_a9a0f7_diplomawork_admin;Password=uchiha322";
         //static string connectionString = @"Data Source = DESKTOP-HHO6PH0; Initial Catalog = WordsDB; Trusted_Connection=True; Encrypt = False";
 
-        public static List<Level> GetLevels()
+        public static ObservableCollection<Level> GetLevels()
         {
             try
             {
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
                     string sqlCommand = @"SELECT * FROM Levels";
-                    return db.Query<Level>(sqlCommand).ToList();
+                    return new ObservableCollection<Level>(db.Query<Level>(sqlCommand).ToList());
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка при загрузке уровней", MessageBoxButton.OK, MessageBoxImage.Error);
-                return new List<Level>();
+                return new ObservableCollection<Level>();
             }
         }
 
-        public static List<Category> GetCategories()
+        public static ObservableCollection<Category> GetCategories()
         {
             try
             {
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
                     string sqlCommand = @"SELECT * FROM Categories";
-                    return db.Query<Category>(sqlCommand).ToList();
+                    return new ObservableCollection<Category>(db.Query<Category>(sqlCommand).ToList());
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка при загрузке категорий", MessageBoxButton.OK, MessageBoxImage.Error);
-                return new List<Category>();
+                return new ObservableCollection<Category>();
             }
         }
 
-        public static List<Word> GetWords(string wordCategory)
+        public static ObservableCollection<Word> GetWords(string wordCategory)
         {
             try
             {
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
                     string sqlCommand = $"SELECT * FROM [{wordCategory}]";
-                    return db.Query<Word>(sqlCommand).ToList();
+                    return new ObservableCollection<Word>(db.Query<Word>(sqlCommand).ToList());
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка при загрузке списка слов", MessageBoxButton.OK, MessageBoxImage.Error);
-                return new List<Word>();
+                return new ObservableCollection<Word>();
             }
         }
 

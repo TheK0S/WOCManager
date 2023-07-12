@@ -58,8 +58,8 @@
             <TextBlock Text="Manager"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Категории"/>
-            <Button Content="Слова"/>
+            <Button Content="Категории" Command="{Binding AddCategoryWindow}"/>
+            <Button Content="Слова" Command="{Binding AddWordWindow}"/>
         </StackPanel>
     </Grid>
 </Window>
