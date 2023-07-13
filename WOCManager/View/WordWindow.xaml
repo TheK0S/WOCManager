@@ -40,8 +40,8 @@
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Black"/>
-                <GradientStop Color="#FF4A386D" Offset="1"/>
+                <GradientStop Color="#091D36"/>
+                <GradientStop Color="#3A4E7A" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
         <Grid.RowDefinitions>
@@ -56,14 +56,22 @@
 
         <Border  Grid.Row="1" Grid.Column="1" Width="440" Height="22" CornerRadius="10" Background="White">
             <StackPanel Orientation="Horizontal" Margin="10 0">
-                <Image Source="/View/search.png" Width="20" Height="12"/>
+                <Image Source="/Image/search.png" Width="20" Height="12"/>
                 <TextBox Width="400" BorderThickness="0" Margin="0 2 0 0"/>
             </StackPanel>
         </Border>
         
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="20 0" Height="20">
             <TextBlock Text="Категория" Margin="0 0 20 0"/>
-            <ComboBox Width="200"/>
+            <ComboBox Width="200">
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Background" Value="#FF380036"/>
+                        <Setter Property="Foreground" Value="#FF969696"/>
+                        <Setter Property="BorderBrush" Value="#FF580058"/>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
         </StackPanel>
         
         <StackPanel Grid.Row="2" Grid.Column="0" Margin="20">
@@ -78,7 +86,7 @@
             <TextBlock Text="Перевод предложения"/>
             <TextBox/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Image Height="250" Width="250" Margin="0 20 25 0" Source="/View/default_picture.png"/>
+                <Image Height="250" Width="250" Margin="0 20 25 0" Source="/Image/default_picture.png"/>
                 <StackPanel>
                     <Button Content="Изображение" Margin="0 20 0 45"/>
                     <Button Content="Добавить" Width="130" Margin="0 0 0 20"/>

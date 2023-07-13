@@ -24,14 +24,32 @@ namespace WOCManager.Model
         static string connectionString = @"Data Source=SQL5110.site4now.net;Initial Catalog=db_a9a0f7_diplomawork;User Id=db_a9a0f7_diplomawork_admin;Password=uchiha322";
         //static string connectionString = @"Data Source = DESKTOP-HHO6PH0; Initial Catalog = WordsDB; Trusted_Connection=True; Encrypt = False";
 
-        public static ObservableCollection<Level> GetLevels()
+        public static  ObservableCollection<Level> GetLevels()
         {
             try
             {
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
                     string sqlCommand = @"SELECT * FROM Levels";
-                    return new ObservableCollection<Level>(db.Query<Level>(sqlCommand).ToList());
+                    return new ObservableCollection<Level>(db.Query<Level>(sqlCommand));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка при загрузке уровней", MessageBoxButton.OK, MessageBoxImage.Error);
+                return new ObservableCollection<Level>();
+            }
+        }
+
+        public static async Task<ObservableCollection<Level>> GetLevelsAsync()
+        {
+            try
+            {
+                using (IDbConnection db = new SqlConnection(connectionString))
+                {
+                    string sqlCommand = @"SELECT * FROM Levels";
+                    var levels = await db.QueryAsync<Level>(sqlCommand);
+                    return new ObservableCollection<Level>(levels);
                 }
             }
             catch (Exception ex)
@@ -48,7 +66,25 @@ namespace WOCManager.Model
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
                     string sqlCommand = @"SELECT * FROM Categories";
-                    return new ObservableCollection<Category>(db.Query<Category>(sqlCommand).ToList());
+                    return new ObservableCollection<Category>(db.Query<Category>(sqlCommand));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка при загрузке категорий", MessageBoxButton.OK, MessageBoxImage.Error);
+                return new ObservableCollection<Category>();
+            }
+        }
+
+        public static async Task<ObservableCollection<Category>> GetCategoriesAsync()
+        {
+            try
+            {
+                using (IDbConnection db = new SqlConnection(connectionString))
+                {
+                    string sqlCommand = @"SELECT * FROM Categories";
+                    var categories = await db.QueryAsync<Category>(sqlCommand);
+                    return new ObservableCollection<Category>(categories);
                 }
             }
             catch (Exception ex)
@@ -75,7 +111,7 @@ namespace WOCManager.Model
             }
         }
 
-        public static bool RemoveCategory(Category category, bool isShowSuccessful)
+        public static bool RemoveCategory(Category category)
         {
             try
             {
@@ -93,8 +129,8 @@ namespace WOCManager.Model
                     command.CommandText = $"DELETE FROM Categories WHERE Categories.Id = {category.Id}";
                     command.ExecuteNonQuery();
 
-                    if (isShowSuccessful)
-                        MessageBox.Show($"Категория {category.CategoriesName} удалена", "Выполнено");
+                    MessageBox.Show($"Категория {category.CategoriesName} удалена", "Выполнено");
+
                     return true;
                 }
             }
@@ -105,7 +141,7 @@ namespace WOCManager.Model
             }
         }
 
-        public static bool RemoveWord(Word word, bool isShowSuccessful)
+        public static bool RemoveWord(Word word)
         {
             try
             {
@@ -122,8 +158,8 @@ namespace WOCManager.Model
 
                     connection.Close();
 
-                    if(isShowSuccessful)
-                        MessageBox.Show($"Слово {word.Words} удалено", "Выполнено");
+                    MessageBox.Show($"Слово {word.Words} удалено", "Выполнено");
+
                     return true;
                 }
             }
@@ -134,7 +170,7 @@ namespace WOCManager.Model
             }            
         }
 
-        public static void CreateCategory(Category category, bool isShowSuccessful)
+        public static void CreateCategory(Category category)
         {
             try
             {
@@ -159,9 +195,8 @@ namespace WOCManager.Model
                         $" Is_completed INT NOT NULL DEFAULT 0)";
 
                     command.ExecuteNonQuery();
-
-                    if (isShowSuccessful)
-                        MessageBox.Show($"Категория {category.CategoriesName} создана", "Выполнено");
+                                        
+                    MessageBox.Show($"Категория {category.CategoriesName} создана", "Выполнено");
                 }
             }
             catch (Exception ex)
@@ -170,25 +205,24 @@ namespace WOCManager.Model
             }
         }
 
-        public static void UpdateCategory(Category newCategory, Category oldCategory, bool isShowSuccessful)
+        public static void UpdateCategory(Category newCategory, Category oldCategory)
         {
             try
             {               
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {                    
-                    CreateCategory(newCategory, false);
+                    CreateCategory(newCategory);
 
                     string sqlCommand = $"INSERT INTO [{newCategory.CategoriesName}] " +
                         $"SELECT '{newCategory.CategoriesName}', Words, Transcriptions, Sentence, TranslateWords, TransSentence, Picture, Is_completed" +
                         $" FROM [{oldCategory.CategoriesName}]";
                     db.Query<Category>(sqlCommand);
 
-                    if(!RemoveCategory(oldCategory, false))
+                    if(!RemoveCategory(oldCategory))
                         MessageBox.Show($"Не удалена категория с именем {oldCategory.CategoriesName}", "Ошибка при удалении категории",
                             MessageBoxButton.OK, MessageBoxImage.Error);
 
-                    if (isShowSuccessful)
-                        MessageBox.Show($"Категория изменена", "Выполнено");
+                    MessageBox.Show($"Категория изменена", "Выполнено");
                 }
             }
             catch (Exception ex)
@@ -197,7 +231,7 @@ namespace WOCManager.Model
             }
         }
 
-        public static bool AddWord(Word word, bool isShowSuccessful)
+        public static bool AddWord(Word word)
         {
             try
             {
@@ -223,8 +257,8 @@ namespace WOCManager.Model
 
                     command.ExecuteNonQuery();
 
-                    if (isShowSuccessful)
-                        MessageBox.Show($"Слово {word.Words} добавлено", "Выполнено");
+                    MessageBox.Show($"Слово {word.Words} добавлено", "Выполнено");
+
                     return true;
                 }
             }
@@ -235,7 +269,7 @@ namespace WOCManager.Model
             }
         }
 
-        public static bool UpdateWord(Word newWord, Word oldWord, bool isShowSuccessful)
+        public static bool UpdateWord(Word newWord, Word oldWord)
         {
             try
             {
@@ -277,8 +311,8 @@ namespace WOCManager.Model
 
                     command.ExecuteNonQuery();
 
-                    if (isShowSuccessful)
-                        MessageBox.Show($"Слово {oldWord.Words} изменено", "Выполнено");
+                    MessageBox.Show($"Слово {oldWord.Words} изменено", "Выполнено");
+
                     return true;
                 }
             }

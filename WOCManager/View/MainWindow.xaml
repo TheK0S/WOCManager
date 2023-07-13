@@ -7,13 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="FontSize" Value="40"/>
-            <Setter Property="Foreground" Value="#FFB4B4B5"/>
-        </Style>
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="20"/>
-            <Setter Property="Foreground" Value="#FFD2D1D1"/>
+            <Setter Property="Foreground" Value="#c2d2e9"/>
             <Setter Property="Background" Value="#FF9B47AF"/>
             <Setter Property="Width" Value="200"/>
             <Setter Property="Height" Value="60"/>
@@ -37,27 +33,19 @@
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Black"/>
-                <GradientStop Color="#FF4A386D" Offset="1"/>
+                <GradientStop Color="#091D36"/>
+                <GradientStop Color="#3A4E7A" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.8*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="0" Grid.Column="0"/>
-        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock Text="White"/>
-            <TextBlock Text="Owl"/>
-            <TextBlock Text="Cards"/>
-            <TextBlock Text="Manager"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+        <Image Grid.Row="0" Source="/Image/Group 32.png"/>
+        <TextBlock Grid.Row="1" Text="Manager" TextAlignment="Center" Foreground="#c2d2e9" FontSize="60" FontFamily="Comic Sans MS" FontWeight="Bold"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Content="Категории" Command="{Binding AddCategoryWindow}"/>
             <Button Content="Слова" Command="{Binding AddWordWindow}"/>
         </StackPanel>

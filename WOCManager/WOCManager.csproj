@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Image\default_picture.png" />
+    <None Remove="Image\Group 32.png" />
+    <None Remove="Image\search.png" />
     <None Remove="View\default_picture.png" />
-    <None Remove="View\search.png" />
+    <None Remove="View\Group 32.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,8 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="View\default_picture.png" />
-    <Resource Include="View\search.png" />
+    <Resource Include="Image\default_picture.png" />
+    <Resource Include="Image\Group 32.png" />
+    <Resource Include="Image\search.png" />
   </ItemGroup>
 
 </Project>
