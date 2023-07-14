@@ -35,6 +35,28 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                    To="#FF7E2288" Duration="0:0:0.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                    To="#FF9B47AF" Duration="0:0:0.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
     <Grid>
@@ -63,12 +85,21 @@
         
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="20 0" Height="20">
             <TextBlock Text="Категория" Margin="0 0 20 0"/>
-            <ComboBox Width="200">
+            <ComboBox Width="333">
                 <ComboBox.ItemContainerStyle>
                     <Style TargetType="ComboBoxItem">
-                        <Setter Property="Background" Value="#FF380036"/>
-                        <Setter Property="Foreground" Value="#FF969696"/>
-                        <Setter Property="BorderBrush" Value="#FF580058"/>
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#FF354569" Offset="0" />
+                                    <GradientStop Color="#3A4E7A" Offset="0.45" />
+                                    <GradientStop Color="#3A4E7A" Offset="0.55" />
+                                    <GradientStop Color="#FF354569" Offset="1" />
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="BorderBrush" Value="#091D36"/>
                     </Style>
                 </ComboBox.ItemContainerStyle>
             </ComboBox>
@@ -100,8 +131,41 @@
         <DataGrid Grid.Row="2" Grid.Column="1" Margin="10"
                   AutoGenerateColumns="False" 
                   CanUserAddRows="False"
-                  IsReadOnly="True">
-            <DataGrid.Columns>
+                  IsReadOnly="True"
+                  Background="Transparent"
+                  Foreground="White">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#33000000" />
+                    <Setter Property="Height" Value="20" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+                <Style TargetType="DataGridRowHeader">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="SeparatorBrush" Value="Transparent" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#FF354569" Offset="0" />
+                                <GradientStop Color="#3A4E7A" Offset="0.45" />
+                                <GradientStop Color="#3A4E7A" Offset="0.55" />
+                                <GradientStop Color="#FF354569" Offset="1" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#FF415686"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>                
                 <DataGridTextColumn Header="Категория" Binding="{Binding CategoryName}"/>
                 <DataGridTextColumn Header="Слово" Binding="{Binding Words}"/>
                 <DataGridTextColumn Header="Транскрипция" Binding="{Binding Transcriptions}"/>

@@ -78,9 +78,18 @@
             <ComboBox ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel}">
                 <ComboBox.ItemContainerStyle>
                     <Style TargetType="ComboBoxItem">
-                        <Setter Property="Background" Value="#FF380036"/>
-                        <Setter Property="Foreground" Value="#FF969696"/>
-                        <Setter Property="BorderBrush" Value="#FF580058"/>
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#FF354569" Offset="0" />
+                                    <GradientStop Color="#3A4E7A" Offset="0.45" />
+                                    <GradientStop Color="#3A4E7A" Offset="0.55" />
+                                    <GradientStop Color="#FF354569" Offset="1" />
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="BorderBrush" Value="#091D36"/>
                     </Style>
                 </ComboBox.ItemContainerStyle>
             </ComboBox>

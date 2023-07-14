@@ -8,5 +8,6 @@ namespace WOCManager.Controller
 {
     internal class WordController
     {
+
     }
 }
