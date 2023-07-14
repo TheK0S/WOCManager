@@ -15,7 +15,7 @@ namespace WOCManager.Controller
             if(value is byte[])
             {            
                 var bytes = (byte[])value;
-                return Model.Data.ByteArrToImageSource(bytes);
+                return Model.WordData.ByteArrToImageSource(bytes);
             }
             return null;
         }

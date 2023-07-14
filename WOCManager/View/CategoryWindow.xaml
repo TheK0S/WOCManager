@@ -52,7 +52,7 @@
         <Border  Grid.Row="1" Grid.Column="1" Width="440" Height="22" CornerRadius="10" Background="White">
             <StackPanel Orientation="Horizontal" Margin="10 0">
                 <Image Source="/Image/search.png" Width="20" Height="12"/>
-                <TextBox Width="400" BorderThickness="0" Margin="0 2 0 0"/>
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="400" BorderThickness="0" Margin="0 2 0 0"/>
             </StackPanel>
         </Border>
 
@@ -78,7 +78,7 @@
                   AutoGenerateColumns="False" 
                   CanUserAddRows="False"
                   IsReadOnly="True"
-                  ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}">
+                  ItemsSource="{Binding FilteredCategories}" SelectedItem="{Binding SelectedCategory}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Уровень" Binding="{Binding LevelsId, Converter={StaticResource LevelIdToLevelNameConverter}}" Width="150"/>
                 <DataGridTextColumn Header="Имя категории" Binding="{Binding CategoriesName}" Width="1*"/>

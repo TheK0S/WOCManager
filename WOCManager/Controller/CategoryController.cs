@@ -14,12 +14,38 @@ namespace WOCManager.Controller
 {
     internal class CategoryController : INotifyPropertyChanged
     {
-        public ObservableCollection<Level> Levels { get; set; }
-        public ObservableCollection<Category> Categories { get; set; }
-
+        private ObservableCollection<Category>? _categories;
+        private ObservableCollection<Category>? _filteredCategories;
         private Level? _selectedLevel;
         private Category? _selectedCategory;
         private string? _categoryName;
+        private string? _searchText;
+        private RelayCommand? _addCategory;
+        private RelayCommand? _updateCategory;
+        private RelayCommand? _removeCategory;
+
+        public ObservableCollection<Level> Levels { get; set; }
+        
+        public ObservableCollection<Category> Categories
+        {
+            get => _categories ?? new ObservableCollection<Category>();
+            set
+            {
+                _categories = value;
+                OnPropertyChanged(nameof(Categories));
+                ApplyFilter();
+            }
+        }
+
+        public ObservableCollection<Category> FilteredCategories
+        {
+            get => _filteredCategories ?? new ObservableCollection<Category>();
+            set
+            {
+                _filteredCategories = value;
+                OnPropertyChanged(nameof(FilteredCategories));
+            }
+        }
 
         public Level? SelectedLevel
         {
@@ -53,11 +79,17 @@ namespace WOCManager.Controller
             }
         }
 
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                ApplyFilter();
+                OnPropertyChanged(nameof(SearchText));
+            }
+        }
 
-        private RelayCommand? _addCategory;
-        private RelayCommand? _updateCategory;
-        private RelayCommand? _removeCategory;
-        
 
         public RelayCommand AddCategory
         {
@@ -66,19 +98,21 @@ namespace WOCManager.Controller
                 return _addCategory??
                     (_addCategory = new RelayCommand(async obj =>
                     {
-                        await Application.Current.Dispatcher.InvokeAsync(() => 
+                        await Task.Run(() =>
                         {
-                            if(CategoryName != null && SelectedLevel != null)
+                            if (CategoryName != null && SelectedLevel != null)
                             {
                                 var newCategory = new Category { LevelsId = SelectedLevel.Id, CategoriesName = CategoryName };
 
-                                if (SelectedCategory == null || (SelectedCategory is not null && SelectedCategory != newCategory))
+                                if (SelectedCategory is null || (SelectedCategory is not null && SelectedCategory != newCategory))
                                 {
-                                    Data.CreateCategory(newCategory);
-                                    Categories = Data.GetCategories();
+                                    CategoryData.CreateCategory(newCategory);
+                                    Categories = CategoryData.GetCategories();                                    
                                 }
                                 else
+                                {
                                     MessageBox.Show("Категория уже существует", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
                             }
                             else
                             {
@@ -96,7 +130,7 @@ namespace WOCManager.Controller
                 return _updateCategory ??
                     (_updateCategory = new RelayCommand(async obj =>
                     {
-                        await Application.Current.Dispatcher.InvokeAsync(() =>
+                        await Task.Run(() =>
                         {
                             if (CategoryName != null && SelectedLevel != null && SelectedCategory is not null)
                             {
@@ -104,8 +138,8 @@ namespace WOCManager.Controller
 
                                 if(SelectedCategory != newCategory)
                                 {
-                                    Data.UpdateCategory(newCategory, SelectedCategory);
-                                    Categories = Data.GetCategories();
+                                    CategoryData.UpdateCategory(newCategory, SelectedCategory);
+                                    Categories = CategoryData.GetCategories();
                                 }                                    
                                 else
                                     MessageBox.Show("Нет изменений для сохранения. Внесите изменения в поля категории и попробуйте снова", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -126,14 +160,14 @@ namespace WOCManager.Controller
                 return _removeCategory ??
                     (_removeCategory = new RelayCommand(async obj =>
                     {
-                        await Application.Current.Dispatcher.InvokeAsync(() =>
+                        await Task.Run(() =>
                         {
                             if (SelectedCategory is not null)
                             {
-                                if(MessageBox.Show("Удаление категории приведет к потере всех слов добавленных в категорию.\n\t\tВы уверены?", "Внимание!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                                if(MessageBox.Show("Удаление категории приведет к потере всех слов добавленных в категорию.\n\t\t\tВы уверены?", "Внимание!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                                 {
-                                    Data.RemoveCategory(SelectedCategory);
-                                    Categories = Data.GetCategories();
+                                    CategoryData.RemoveCategory(SelectedCategory);
+                                    Categories = CategoryData.GetCategories();
                                 }
                             }
                             else
@@ -147,18 +181,22 @@ namespace WOCManager.Controller
 
         public CategoryController()
         {
-            //Application.Current.Dispatcher.InvokeAsync(async () =>
-            //{
-            //    Categories = await Data.GetCategories();
-            //});
+            Categories = CategoryData.GetCategories();
+            FilteredCategories = Categories;
+            Levels = CategoryData.GetLevels();
+        }
 
-            //Application.Current.Dispatcher.InvokeAsync(async () =>
-            //{
-            //    Levels = await Data.GetLevels();
-            //});
-
-            Categories = Data.GetCategories();
-            Levels = Data.GetLevels();
+        private void ApplyFilter()
+        {
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                FilteredCategories = Categories;
+            }
+            else
+            {
+                FilteredCategories = new ObservableCollection<Category>(
+                    Categories.Where(c => c.CategoriesName.ToLower().Contains(SearchText.ToLower())));
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
