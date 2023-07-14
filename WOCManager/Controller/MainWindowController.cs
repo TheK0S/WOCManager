@@ -11,8 +11,8 @@ namespace WOCManager.Controller
 {
     internal class MainWindowController
     {
-        private RelayCommand _addCategoryWindow;
-        private RelayCommand _addWordWindow;
+        private RelayCommand? _addCategoryWindow;
+        private RelayCommand? _addWordWindow;
 
         public RelayCommand AddCategoryWindow
         {

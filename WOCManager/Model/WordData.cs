@@ -43,8 +43,6 @@ namespace WOCManager.Model
             }
         }
 
-
-
         public static bool RemoveWord(Word word)
         {
             try
@@ -73,7 +71,6 @@ namespace WOCManager.Model
                 return false;
             }            
         }
-        
 
         public static bool AddWord(Word word)
         {

@@ -81,7 +81,7 @@ namespace WOCManager.Controller
 
         public string SearchText
         {
-            get => _searchText;
+            get => _searchText ?? "";
             set
             {
                 _searchText = value;

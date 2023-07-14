@@ -43,11 +43,26 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="0" Source="/Image/Group 32.png"/>
-        <TextBlock Grid.Row="1" Text="Manager" TextAlignment="Center" Foreground="#c2d2e9" FontSize="60" FontFamily="Comic Sans MS" FontWeight="Bold"/>
+        <Image x:Name="image" Grid.Row="0" Source="/Image/Group 32.png"/>
+        <TextBlock x:Name="textBlock" Grid.Row="1" Text="Manager"
+                   TextAlignment="Center" Foreground="#c2d2e9"
+                   FontSize="60" FontFamily="Comic Sans MS" FontWeight="Bold"
+                   Opacity="0"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Content="Категории" Command="{Binding AddCategoryWindow}"/>
             <Button Content="Слова" Command="{Binding AddWordWindow}"/>
         </StackPanel>
     </Grid>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <EventTrigger.Actions>
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:3"/>
+                        <DoubleAnimation Storyboard.TargetName="textBlock" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:2" BeginTime="0:0:2"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger.Actions>
+        </EventTrigger>
+    </Window.Triggers>
 </Window>
