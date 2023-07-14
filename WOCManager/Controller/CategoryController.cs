@@ -55,8 +55,9 @@ namespace WOCManager.Controller
 
 
         private RelayCommand? _addCategory;
-        private RelayCommand? _removeCategory;
         private RelayCommand? _updateCategory;
+        private RelayCommand? _removeCategory;
+        
 
         public RelayCommand AddCategory
         {
@@ -69,11 +70,75 @@ namespace WOCManager.Controller
                         {
                             if(CategoryName != null && SelectedLevel != null)
                             {
-                                Data.CreateCategory(new Category { LevelsId = SelectedLevel.Id, CategoriesName = CategoryName });
+                                var newCategory = new Category { LevelsId = SelectedLevel.Id, CategoriesName = CategoryName };
+
+                                if (SelectedCategory == null || (SelectedCategory is not null && SelectedCategory != newCategory))
+                                {
+                                    Data.CreateCategory(newCategory);
+                                    Categories = Data.GetCategories();
+                                }
+                                else
+                                    MessageBox.Show("Категория уже существует", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                             else
                             {
                                 MessageBox.Show("Не заполнены поля для добавления категории", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        });
+                    }));
+            }
+        }
+
+        public RelayCommand UpdateCategory
+        {
+            get
+            {
+                return _updateCategory ??
+                    (_updateCategory = new RelayCommand(async obj =>
+                    {
+                        await Application.Current.Dispatcher.InvokeAsync(() =>
+                        {
+                            if (CategoryName != null && SelectedLevel != null && SelectedCategory is not null)
+                            {
+                                var newCategory = new Category { LevelsId = SelectedLevel.Id, CategoriesName = CategoryName };
+
+                                if(SelectedCategory != newCategory)
+                                {
+                                    Data.UpdateCategory(newCategory, SelectedCategory);
+                                    Categories = Data.GetCategories();
+                                }                                    
+                                else
+                                    MessageBox.Show("Нет изменений для сохранения. Внесите изменения в поля категории и попробуйте снова", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Не заполнены поля для изменения категории", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        });
+                    }));
+            }
+        }
+
+        public RelayCommand RemoveCategory
+        {
+            get
+            {
+                return _removeCategory ??
+                    (_removeCategory = new RelayCommand(async obj =>
+                    {
+                        await Application.Current.Dispatcher.InvokeAsync(() =>
+                        {
+                            if (SelectedCategory is not null)
+                            {
+                                if(MessageBox.Show("Удаление категории приведет к потере всех слов добавленных в категорию.\n\t\tВы уверены?", "Внимание!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                                {
+                                    Data.RemoveCategory(SelectedCategory);
+                                    Categories = Data.GetCategories();
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Не выбрана категория для удаления", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         });
                     }));

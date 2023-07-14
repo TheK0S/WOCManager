@@ -70,8 +70,8 @@
             <TextBlock Text="Название категории" Foreground="White"/>
             <TextBox Text="{Binding CategoryName}" Margin="0 0 0 10"/>
             <Button Content="Добавить" Command="{Binding AddCategory}"/>
-            <Button Content="Изменить"/>
-            <Button Content="Удалить"/>
+            <Button Content="Изменить" Command="{Binding UpdateCategory}"/>
+            <Button Content="Удалить" Command="{Binding RemoveCategory}"/>
         </StackPanel>
 
         <DataGrid Grid.Row="2" Grid.Column="1" Margin="10"

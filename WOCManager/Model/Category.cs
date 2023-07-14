@@ -41,5 +41,46 @@ namespace WOCManager.Model
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null || GetType() != obj.GetType())
+                return false;
+
+            return Equals(obj as Category);
+        }
+
+        public bool Equals(Category other)
+        {
+            if (other is null) return false;
+            return LevelsId == other.LevelsId && CategoriesName == other.CategoriesName;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + LevelsId.GetHashCode();
+                hash = hash * 23 + (CategoriesName != null ? CategoriesName.GetHashCode() : 0);
+                return hash;
+            }
+        }
+
+        public static bool operator ==(Category category1, Category category2)
+        {
+            if (ReferenceEquals(category1, null) || ReferenceEquals(category2, null))
+                return false;
+
+            if (ReferenceEquals(category1, category2))
+                return true;            
+
+            return category1.Equals(category2);
+        }
+
+        public static bool operator !=(Category category1, Category category2)
+        {
+            return !(category1 == category2);
+        }
     }
 }
