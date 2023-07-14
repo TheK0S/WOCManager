@@ -9,13 +9,18 @@
         Title="WordWindow" Height="600" Width="1200">
     <Window.Resources>
         <controller:ByteArrayToBitmapSourceConverter x:Key="ByteArrayToBitmapSourceConverter"/>
-        <Style TargetType="TextBlock">
+        <Style x:Key="labelTextBlock" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="Margin" Value="0 10 0 0"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
-        <Style TargetType="TextBox">
 
+        <Style x:Key="updateBtn" TargetType="Button">
+            <Setter Property="Background" Value="#FFCACACA"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="3 0 0 0"/>
+            <Setter Property="BorderBrush" Value="#FFE6E1E1"/>
         </Style>
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="15"/>
@@ -79,13 +84,13 @@
         <Border  Grid.Row="1" Grid.Column="1" Width="440" Height="22" CornerRadius="10" Background="White">
             <StackPanel Orientation="Horizontal" Margin="10 0">
                 <Image Source="/Image/search.png" Width="20" Height="12"/>
-                <TextBox Width="400" BorderThickness="0" Margin="0 2 0 0"/>
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="400" BorderThickness="0" Margin="0 2 0 0"/>
             </StackPanel>
         </Border>
         
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="20 0" Height="20">
-            <TextBlock Text="Категория" Margin="0 0 20 0"/>
-            <ComboBox Width="333">
+            <TextBlock Text="Категория" Margin="0 0 20 0" Style="{StaticResource labelTextBlock}"/>
+            <ComboBox Width="300" ItemsSource="{Binding WordCategories}" SelectedItem="{Binding SelectedWordCategory}">
                 <ComboBox.ItemContainerStyle>
                     <Style TargetType="ComboBoxItem">
                         <Setter Property="Background">
@@ -103,23 +108,26 @@
                     </Style>
                 </ComboBox.ItemContainerStyle>
             </ComboBox>
+            <Button Command="{Binding RefreshCategories}" Style="{StaticResource updateBtn}">
+                <Image Source="/Image/available-updates-24.png"/>
+            </Button>
         </StackPanel>
         
         <StackPanel Grid.Row="2" Grid.Column="0" Margin="20">
-            <TextBlock Text="Слово"/>
-            <TextBox/>
-            <TextBlock Text="Перевод слова"/>
-            <TextBox/>
-            <TextBlock Text="Транскрипция"/>
-            <TextBox/>
-            <TextBlock Text="Предложение"/>
-            <TextBox/>
-            <TextBlock Text="Перевод предложения"/>
-            <TextBox/>
+            <TextBlock Text="Слово" Style="{StaticResource labelTextBlock}"/>
+            <TextBox Text="{Binding WordField}"/>
+            <TextBlock Text="Перевод слова" Style="{StaticResource labelTextBlock}"/>
+            <TextBox Text="{Binding TranslateWordField}"/>
+            <TextBlock Text="Транскрипция" Style="{StaticResource labelTextBlock}"/>
+            <TextBox Text="{Binding TranscriptionWordField}"/>
+            <TextBlock Text="Предложение" Style="{StaticResource labelTextBlock}"/>
+            <TextBox Text="{Binding SentenceWordField}"/>
+            <TextBlock Text="Перевод предложения" Style="{StaticResource labelTextBlock}"/>
+            <TextBox Text="{Binding TransSentenceWordField}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Image Height="250" Width="250" Margin="0 20 25 0" Source="/Image/default_picture.png"/>
+                <Image Source="{Binding SelectedImageSource}" Height="250" Width="250" Margin="0 20 25 0"/>
                 <StackPanel>
-                    <Button Content="Изображение" Margin="0 20 0 45"/>
+                    <Button Content="Изображение" Command="{Binding AddPicture}" Margin="0 20 0 45"/>
                     <Button Content="Добавить" Width="130" Margin="0 0 0 20"/>
                     <Button Content="Редактировать" Width="130" Margin="0 0 0 20"/>
                     <Button Content="Удалить" Width="130"/>
@@ -133,7 +141,9 @@
                   CanUserAddRows="False"
                   IsReadOnly="True"
                   Background="Transparent"
-                  Foreground="White">
+                  Foreground="White"
+                  ItemsSource="{Binding FilteredWords}"
+                  SelectedItem="{Binding SelectedWord}">
             <DataGrid.Resources>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="Background" Value="#33000000" />
@@ -144,7 +154,7 @@
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="BorderThickness" Value="0" />
                     <Setter Property="SeparatorBrush" Value="Transparent" />
-                </Style>
+                </Style>                
             </DataGrid.Resources>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">

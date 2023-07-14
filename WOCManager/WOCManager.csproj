@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Image\available-updates-24.png" />
     <None Remove="Image\default_picture.png" />
     <None Remove="Image\Group 32.png" />
     <None Remove="Image\search.png" />
@@ -22,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Image\available-updates-24.png" />
     <Resource Include="Image\default_picture.png" />
     <Resource Include="Image\Group 32.png" />
     <Resource Include="Image\search.png" />
