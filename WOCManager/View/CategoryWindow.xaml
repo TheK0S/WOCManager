@@ -9,7 +9,7 @@
         Title="CategoryWindow" Height="450" Width="800">
     <Window.Resources>
         <controller:LevelIdToLevelNameConverter x:Key="LevelIdToLevelNameConverter"/>
-        
+
         <Style TargetType="Button">
             <Setter Property="Margin" Value="10"/>
             <Setter Property="FontSize" Value="15"/>
@@ -30,7 +30,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
     </Window.Resources>
     <Grid>
         <Grid.Background>
@@ -42,7 +42,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="15"/>
             <RowDefinition Height="30"/>
-            <RowDefinition/>            
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.5*"/>
@@ -75,10 +75,43 @@
         </StackPanel>
 
         <DataGrid Grid.Row="2" Grid.Column="1" Margin="10"
-                  AutoGenerateColumns="False" 
+                  Background="Transparent"
+                  Foreground="White"
+                  AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   IsReadOnly="True"
                   ItemsSource="{Binding FilteredCategories}" SelectedItem="{Binding SelectedCategory}">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#33000000" />
+                    <Setter Property="Height" Value="20" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+                <Style TargetType="DataGridRowHeader">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="SeparatorBrush" Value="Transparent" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#FF354569" Offset="0" />
+                                <GradientStop Color="#3A4E7A" Offset="0.45" />
+                                <GradientStop Color="#3A4E7A" Offset="0.55" />
+                                <GradientStop Color="#FF354569" Offset="1" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#FF415686"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Уровень" Binding="{Binding LevelsId, Converter={StaticResource LevelIdToLevelNameConverter}}" Width="150"/>
                 <DataGridTextColumn Header="Имя категории" Binding="{Binding CategoriesName}" Width="1*"/>

@@ -24,7 +24,7 @@ namespace WOCManager.View
         {
             InitializeComponent();
 
-            DataContext = new CategoryController();
+            DataContext = new CategoryController();            
         }
     }
 }
