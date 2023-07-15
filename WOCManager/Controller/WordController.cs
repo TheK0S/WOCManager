@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using WOCManager.Model;
+using System.IO;
 
 namespace WOCManager.Controller
 {
@@ -28,12 +29,13 @@ namespace WOCManager.Controller
         private string? _sentenceWordField;
         private string? _transSentenceWordField;
         private string? _transcriptionWordField;
+        private string? _imgLoc;
 
-        private RelayCommand? _refreshCategories;
-        private RelayCommand? _addPicture;
-        private RelayCommand? _addWord;
-        private RelayCommand? _updateWord;
-        private RelayCommand? _removeWord;
+        private RelayCommand? _refreshCategoriesCommand;
+        private RelayCommand? _addPictureCommand;
+        private RelayCommand? _addWordCommand;
+        private RelayCommand? _updateWordCommand;
+        private RelayCommand? _removeWordCommand;
 
         public WordController()
         {
@@ -168,12 +170,12 @@ namespace WOCManager.Controller
             }
         }
 
-        public RelayCommand RefreshCategories
+        public RelayCommand RefreshCategoriesCommand
         {
             get
             {
-                return _refreshCategories ??
-                    (_refreshCategories = new RelayCommand(async obj =>
+                return _refreshCategoriesCommand ??
+                    (_refreshCategoriesCommand = new RelayCommand(async obj =>
                     {
                         SelectedWordCategory = null;
                         await Task.Run(() =>
@@ -184,36 +186,133 @@ namespace WOCManager.Controller
             }
         }
 
-        public RelayCommand AddPicture
+        public RelayCommand AddPictureCommand
         {
             get
             {
-                return _addPicture ??
-                    (_addPicture = new RelayCommand(obj =>
+                return _addPictureCommand ??
+                    (_addPictureCommand = new RelayCommand(obj =>
                     {
-                        try
-                        {
-                            OpenFileDialog ofdPicture = new OpenFileDialog();
-                            ofdPicture.Filter = "SVG files (*.svg)|*.svg|All files (*.*)|*.*";
-                            ofdPicture.FilterIndex = 1;
+                        SVGLoad();
+                    }));
+            }
+        }
+                
 
-                            if (ofdPicture.ShowDialog() == true)
+        public RelayCommand? AddWordCommand
+        {
+            get
+            {
+                return _addWordCommand ??
+                    (_addWordCommand = new RelayCommand(async obj =>
+                    {
+                        if (SelectedWordCategory is null)
+                        {
+                            MessageBox.Show("Не выбрана категория для слова", "Ошибка при добавлении", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
+                        if (!IsWordFieldsValid())
+                        {
+                            MessageBox.Show("Не все поля заполнены", "Ошибка при добавлении", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                                                
+                        Word newWord = new Word
+                        {
+                            Id = 0,
+                            CategoryName = SelectedWordCategory.CategoriesName.Replace("\'", "\'\'"),
+                            Words = WordField.Replace("\'", "\'\'"),
+                            TranslateWords = TranslateWordField.Replace("\'", "\'\'"),
+                            Sentence = SentenceWordField.Replace("\'", "\'\'"),
+                            TransSentence = TransSentenceWordField.Replace("\'", "\'\'"),
+                            Transcriptions = TranscriptionWordField.Replace("\'", "\'\'"),
+                            Picture = GetPictureByteArray(),
+                            Is_completed = 0
+                        };
+
+                        await Task.Run(() =>
+                        {
+                            if(!Words.Contains(newWord))
                             {
-                                SvgDocument svgDocument = SvgDocument.Open(ofdPicture.FileName);
-                                var svgBitmap = svgDocument.Draw();
-                                var svgImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                                    svgBitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                                SelectedImageSource = svgImage;
+                                if(WordData.AddWord(newWord))
+                                {
+                                    Words = WordData.GetWords(SelectedWordCategory.CategoriesName);
+                                    SearchText = string.Empty;
+                                    ApplyWordFilter();
+                                    SelectedWord = null;
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Слово не добавлено так, как оно уже существует", "Ошибка при добавлении слова", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        });                        
+                    }));
+            }
+        }
+
+        private byte[] GetPictureByteArray()
+        {
+            byte[] byteArray;
+
+            if (SelectedWord is not null)
+            {
+                byteArray = SelectedWord.Picture;
+            }                
+            else
+            {
+                FileStream file = new FileStream(_imgLoc, FileMode.Open, FileAccess.Read);
+                BinaryReader binaryReader = new BinaryReader(file);
+                byteArray = binaryReader.ReadBytes((int)file.Length);
+            }
+            return byteArray;
+        }
+
+        public RelayCommand? UpdateWordCommand
+        {
+            get
+            {
+                return _updateWordCommand ??
+                    (_updateWordCommand = new RelayCommand(async obj =>
+                    {
+                        await Task.Run(() =>
+                        {
+                            if (SelectedWordCategory is null)
+                            {
+                                MessageBox.Show("Не выбрана категория для слова", "Ошибка при добавлении", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
                             }
 
-                            //ImgLoc = ofdPicture.FileName.ToString();
-
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, "Ошибка при загрузке картинки", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                            
+                        });
                     }));
+            }
+        }
+
+        private void SVGLoad()
+        {
+            try
+            {
+                OpenFileDialog ofdPicture = new OpenFileDialog();
+                ofdPicture.Filter = "SVG files (*.svg)|*.svg|All files (*.*)|*.*";
+                ofdPicture.FilterIndex = 1;
+
+                if (ofdPicture.ShowDialog() == true)
+                {
+                    SvgDocument svgDocument = SvgDocument.Open(ofdPicture.FileName);
+                    var svgBitmap = svgDocument.Draw();
+                    var svgImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                        svgBitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    SelectedImageSource = svgImage;
+                }
+
+                _imgLoc = ofdPicture.FileName.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка при загрузке картинки", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -225,6 +324,20 @@ namespace WOCManager.Controller
             SentenceWordField = selectedWord.Sentence ?? string.Empty;
             TransSentenceWordField = selectedWord.TransSentence ?? string.Empty;
             TranscriptionWordField = selectedWord.Transcriptions ?? string.Empty;
+        }
+
+        private bool IsWordFieldsValid()
+        {
+            if (   WordField?.Length > 0 
+                && TranslateWordField?.Length > 0
+                && TranscriptionWordField?.Length > 0
+                && SentenceWordField?.Length > 0
+                && TransSentenceWordField?.Length > 0
+                && SelectedImageSource != null)
+            {
+                return true;
+            }
+            else { return false; }
         }
 
         private void ApplyWordFilter()

@@ -179,7 +179,7 @@ namespace WOCManager.Model
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка при приобразовании изображения");
+                MessageBox.Show(ex.Message, "Ошибка при преобразовании изображения");
                 return null;
             }
         }

@@ -127,8 +127,8 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Image Source="{Binding SelectedImageSource}" Height="250" Width="250" Margin="0 20 25 0"/>
                 <StackPanel>
-                    <Button Content="Изображение" Command="{Binding AddPicture}" Margin="0 20 0 45"/>
-                    <Button Content="Добавить" Width="130" Margin="0 0 0 20"/>
+                    <Button Content="Изображение" Command="{Binding AddPictureCommand}" Margin="0 20 0 45"/>
+                    <Button Content="Добавить" Command="{Binding AddWordCommand}" Width="130" Margin="0 0 0 20"/>
                     <Button Content="Редактировать" Width="130" Margin="0 0 0 20"/>
                     <Button Content="Удалить" Width="130"/>
                 </StackPanel>

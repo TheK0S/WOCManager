@@ -72,5 +72,56 @@ namespace WOCManager.Model
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null || GetType() != obj.GetType())
+                return false;
+
+            return Equals(obj as Word);
+        }
+
+        public bool Equals(Word other)
+        {
+            if (other is null) return false;
+            return CategoryName == other.CategoryName
+                && Words == other.Words
+                && Transcriptions == other.Transcriptions
+                && Sentence == other.Sentence
+                && TranslateWords == other.TranslateWords
+                && TransSentence == other.TransSentence
+                && Picture == other.Picture;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + (Words != null ? Words.GetHashCode() : 0);
+                hash = hash * 23 + (Transcriptions != null ? Transcriptions.GetHashCode() : 0);
+                hash = hash * 23 + (Sentence != null ? Sentence.GetHashCode() : 0);
+                hash = hash * 23 + (TranslateWords != null ? TranslateWords.GetHashCode() : 0);
+                hash = hash * 23 + (TransSentence != null ? TransSentence.GetHashCode() : 0);
+                hash = hash * 23 + (Picture != null ? Picture.GetHashCode() : 0);
+                return hash;
+            }
+        }
+
+        public static bool operator ==(Word word1, Word word2)
+        {
+            if (ReferenceEquals(word1, null) || ReferenceEquals(word2, null))
+                return false;
+
+            if (ReferenceEquals(word1, word2))
+                return true;
+
+            return word1.Equals(word2);
+        }
+
+        public static bool operator !=(Word word1, Word word2)
+        {
+            return !(word1 == word2);
+        }
     }
 }
