@@ -120,7 +120,7 @@ namespace WOCManager.Model
 
                     SqlCommand command = new SqlCommand();
 
-                    if(newWord.Picture is not null)
+                    if (newWord.Picture.Length != oldWord.Picture.Length)
                     {
                         command.Parameters.Add("@Picture", SqlDbType.VarBinary, 1000000);
                         command.Parameters["@Picture"].Value = newWord.Picture;
@@ -133,10 +133,10 @@ namespace WOCManager.Model
                         $"TransSentence = '{newWord.TransSentence}', " +
                         $"Picture = @Picture, " +
                         $"Is_completed = {newWord.Is_completed}" +
-                        $"WHERE Id = {newWord.Id}";
+                        $"WHERE Id = {oldWord.Id}";
                     }
                     else
-                    {                        
+                    {
                         command.CommandText = $"UPDATE [{oldWord.CategoryName}] SET " +
                         $"CategoryName = '{oldWord.CategoryName}', " +
                         $"Words = '{newWord.Words}', " +
@@ -145,7 +145,7 @@ namespace WOCManager.Model
                         $"TranslateWords = '{newWord.TranslateWords}', " +
                         $"TransSentence = '{newWord.TransSentence}', " +
                         $"Is_completed = {newWord.Is_completed}" +
-                        $"WHERE Id = {newWord.Id}";
+                        $"WHERE Id = {oldWord.Id}";
                     }
 
                     command.Connection = connection;

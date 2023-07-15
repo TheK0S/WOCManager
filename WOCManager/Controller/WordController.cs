@@ -19,7 +19,7 @@ namespace WOCManager.Controller
     {
         private ObservableCollection<Word>? _words;
         private Word? _selectedWord;
-        private BitmapSource? _selectedImageSource;
+        private byte[]? _selectedByteArray;
         private ObservableCollection<Word>? _filteredWords;
         private ObservableCollection<Category>? _wordCategories;
         private Category? _selectedWordCategory;
@@ -54,7 +54,7 @@ namespace WOCManager.Controller
 
         public Word? SelectedWord
         {
-            get => _selectedWord ?? new Word();
+            get => _selectedWord;
             set
             {
                 _selectedWord = value;
@@ -63,13 +63,13 @@ namespace WOCManager.Controller
             }
         }
         
-        public BitmapSource? SelectedImageSource
+        public byte[]? SelectedByteArray
         {
-            get => _selectedImageSource;
+            get => _selectedByteArray;
             set
             {
-                _selectedImageSource = value;
-                OnPropertyChanged(nameof(SelectedImageSource));
+                _selectedByteArray = value;
+                OnPropertyChanged(nameof(SelectedByteArray));
             }
         }
 
@@ -222,19 +222,15 @@ namespace WOCManager.Controller
 
                         await Task.Run(() =>
                         {
-                            if(!WordContains(newWord))
-                            {
-                                if(WordData.AddWord(newWord))
-                                {
-                                    Words = WordData.GetWords(SelectedWordCategory.CategoriesName);
-                                    SearchText = string.Empty;
-                                    ApplyWordFilter();
-                                    SelectedWord = null;
-                                }
-                            }
-                            else
+                            if(WordContains(newWord))
                             {
                                 MessageBox.Show("Слово не добавлено так, как оно уже существует", "Ошибка при добавлении слова", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                            
+                            if (WordData.AddWord(newWord))
+                            {
+                                UpdateWordsCollection();
                             }
                         });                        
                     }));
@@ -249,24 +245,30 @@ namespace WOCManager.Controller
                 return _updateWordCommand ??
                     (_updateWordCommand = new RelayCommand(async obj =>
                     {
+                        if (SelectedWordCategory is null || SelectedWord is null)
+                        {
+                            MessageBox.Show("Не выбрана категория или слово для изменения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
+                        if (!IsWordFieldsValid())
+                        {
+                            MessageBox.Show("Не все поля заполнены", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
+                        Word word = CreateWordFromDataInFields();
+
+                        if(word == SelectedWord)
+                        {
+                            MessageBox.Show("Нет изменений для сохранения", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+
                         await Task.Run(() =>
                         {
-                            if (SelectedWordCategory is not null && SelectedWord is not null)
-                            {
-                                if(IsWordFieldsValid())
-                                {
-                                    WordData.UpdateWord(CreateWordFromDataInFields() , SelectedWord);
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Не все поля заполнены", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("Не выбрана категория или слово для изменения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                            
+                            if (WordData.UpdateWord(word, SelectedWord))
+                                UpdateWordsCollection();
                         });
                     }));
             }
@@ -279,12 +281,19 @@ namespace WOCManager.Controller
                 return _removeWordCommand ??
                     (_removeWordCommand = new RelayCommand(async obj =>
                     {
-                        if(SelectedWord is not null && MessageBox.Show($"Вы хотите удалить слово {SelectedWord?.Words} из категории {SelectedWord?.CategoryName}",
-                            "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        if(SelectedWord is null)
+                        {
+                            MessageBox.Show("Не выбрано слово для удаления", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                        if(MessageBox.Show($"Вы хотите удалить слово {SelectedWord?.Words} из категории {SelectedWord?.CategoryName}", "Внимание",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
                             await Task.Run(() =>
                             {
-                                WordData.RemoveWord(SelectedWord);
+                                if (WordData.RemoveWord(SelectedWord))
+                                    if(SelectedWordCategory is not null)
+                                        UpdateWordsCollection();
                             });
                         }
                     }));
@@ -319,27 +328,35 @@ namespace WOCManager.Controller
                 Sentence = SentenceWordField.Replace("\'", "\'\'"),
                 TransSentence = TransSentenceWordField.Replace("\'", "\'\'"),
                 Transcriptions = TranscriptionWordField.Replace("\'", "\'\'"),
-                Picture = GetPictureByteArray(),
+                Picture = SelectedByteArray,
                 Is_completed = 0
             };
         }
 
-        private byte[] GetPictureByteArray()
+        //private byte[] GetPictureByteArray()
+        //{
+        //    byte[] byteArray;
+
+        //    if (SelectedWord?.Picture != null)
+        //    {
+        //        byteArray = SelectedWord.Picture;
+        //    }
+        //    else
+        //    {
+        //        FileStream file = new FileStream(_imgLoc, FileMode.Open, FileAccess.Read);
+        //        BinaryReader binaryReader = new BinaryReader(file);
+        //        byteArray = binaryReader.ReadBytes((int)file.Length);
+        //    }
+
+        //    return byteArray;
+        //}
+
+        private void UpdateWordsCollection()
         {
-            byte[] byteArray;
-
-            if (SelectedWord?.Picture != null)
-            {
-                byteArray = SelectedWord.Picture;
-            }
-            else
-            {
-                FileStream file = new FileStream(_imgLoc, FileMode.Open, FileAccess.Read);
-                BinaryReader binaryReader = new BinaryReader(file);
-                byteArray = binaryReader.ReadBytes((int)file.Length);
-            }
-
-            return byteArray;
+            Words = WordData.GetWords(SelectedWordCategory.CategoriesName);
+            SearchText = string.Empty;
+            ApplyWordFilter();
+            SelectedWord = null;
         }
 
         private void SVGLoad()
@@ -352,15 +369,10 @@ namespace WOCManager.Controller
 
                 if (ofdPicture.ShowDialog() == true)
                 {
-                    SvgDocument svgDocument = SvgDocument.Open(ofdPicture.FileName);
-                    var svgBitmap = svgDocument.Draw();
-                    var svgImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                        svgBitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                    SelectedImageSource = svgImage;
+                    FileStream file = new FileStream(ofdPicture.FileName, FileMode.Open, FileAccess.Read);
+                    BinaryReader binaryReader = new BinaryReader(file);
+                    SelectedByteArray = binaryReader.ReadBytes((int)file.Length);
                 }
-
-                _imgLoc = ofdPicture.FileName.ToString();
-
             }
             catch (Exception ex)
             {
@@ -370,7 +382,7 @@ namespace WOCManager.Controller
 
         private void FillInTheFields(Word selectedWord)
         {
-            SelectedImageSource = (BitmapSource)WordData.ByteArrToImageSource(selectedWord.Picture);
+            SelectedByteArray = selectedWord.Picture;
             WordField = selectedWord.Words ?? string.Empty;
             TranslateWordField = selectedWord.TranslateWords ?? string.Empty;
             SentenceWordField = selectedWord.Sentence ?? string.Empty;
@@ -380,12 +392,12 @@ namespace WOCManager.Controller
 
         private bool IsWordFieldsValid()
         {
-            if (   WordField?.Length > 0 
+            if (WordField?.Length > 0 
                 && TranslateWordField?.Length > 0
                 && TranscriptionWordField?.Length > 0
                 && SentenceWordField?.Length > 0
                 && TransSentenceWordField?.Length > 0
-                && SelectedImageSource != null)
+                && SelectedByteArray != null)
             {
                 return true;
             }
