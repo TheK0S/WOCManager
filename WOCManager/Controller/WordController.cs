@@ -52,7 +52,7 @@ namespace WOCManager.Controller
             }
         }
 
-        public Word SelectedWord
+        public Word? SelectedWord
         {
             get => _selectedWord ?? new Word();
             set
@@ -217,23 +217,12 @@ namespace WOCManager.Controller
                             MessageBox.Show("Не все поля заполнены", "Ошибка при добавлении", MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
                         }
-                                                
-                        Word newWord = new Word
-                        {
-                            Id = 0,
-                            CategoryName = SelectedWordCategory.CategoriesName.Replace("\'", "\'\'"),
-                            Words = WordField.Replace("\'", "\'\'"),
-                            TranslateWords = TranslateWordField.Replace("\'", "\'\'"),
-                            Sentence = SentenceWordField.Replace("\'", "\'\'"),
-                            TransSentence = TransSentenceWordField.Replace("\'", "\'\'"),
-                            Transcriptions = TranscriptionWordField.Replace("\'", "\'\'"),
-                            Picture = GetPictureByteArray(),
-                            Is_completed = 0
-                        };
+
+                        Word newWord = CreateWordFromDataInFields();
 
                         await Task.Run(() =>
                         {
-                            if(!Words.Contains(newWord))
+                            if(!WordContains(newWord))
                             {
                                 if(WordData.AddWord(newWord))
                                 {
@@ -252,23 +241,7 @@ namespace WOCManager.Controller
             }
         }
 
-        private byte[] GetPictureByteArray()
-        {
-            byte[] byteArray;
-
-            if (SelectedWord is not null)
-            {
-                byteArray = SelectedWord.Picture;
-            }                
-            else
-            {
-                FileStream file = new FileStream(_imgLoc, FileMode.Open, FileAccess.Read);
-                BinaryReader binaryReader = new BinaryReader(file);
-                byteArray = binaryReader.ReadBytes((int)file.Length);
-            }
-            return byteArray;
-        }
-
+        
         public RelayCommand? UpdateWordCommand
         {
             get
@@ -278,16 +251,95 @@ namespace WOCManager.Controller
                     {
                         await Task.Run(() =>
                         {
-                            if (SelectedWordCategory is null)
+                            if (SelectedWordCategory is not null && SelectedWord is not null)
                             {
-                                MessageBox.Show("Не выбрана категория для слова", "Ошибка при добавлении", MessageBoxButton.OK, MessageBoxImage.Error);
-                                return;
+                                if(IsWordFieldsValid())
+                                {
+                                    WordData.UpdateWord(CreateWordFromDataInFields() , SelectedWord);
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Не все поля заполнены", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
                             }
-
+                            else
+                            {
+                                MessageBox.Show("Не выбрана категория или слово для изменения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
                             
                         });
                     }));
             }
+        }
+
+        public RelayCommand? RemoveWordCommand
+        {
+            get
+            {
+                return _removeWordCommand ??
+                    (_removeWordCommand = new RelayCommand(async obj =>
+                    {
+                        if(SelectedWord is not null && MessageBox.Show($"Вы хотите удалить слово {SelectedWord?.Words} из категории {SelectedWord?.CategoryName}",
+                            "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            await Task.Run(() =>
+                            {
+                                WordData.RemoveWord(SelectedWord);
+                            });
+                        }
+                    }));
+            }
+        }
+
+        private bool WordContains(Word word)
+        {
+            bool isContains = false;
+
+            foreach (var item in Words)
+            {
+                if(word == item)
+                {
+                    isContains = true;
+                    break;
+                }
+            }
+
+            return isContains;
+        }
+
+
+        private Word CreateWordFromDataInFields()
+        {
+            return new Word
+            {
+                Id = 0,
+                CategoryName = SelectedWordCategory?.CategoriesName.Replace("\'", "\'\'"),
+                Words = WordField.Replace("\'", "\'\'"),
+                TranslateWords = TranslateWordField.Replace("\'", "\'\'"),
+                Sentence = SentenceWordField.Replace("\'", "\'\'"),
+                TransSentence = TransSentenceWordField.Replace("\'", "\'\'"),
+                Transcriptions = TranscriptionWordField.Replace("\'", "\'\'"),
+                Picture = GetPictureByteArray(),
+                Is_completed = 0
+            };
+        }
+
+        private byte[] GetPictureByteArray()
+        {
+            byte[] byteArray;
+
+            if (SelectedWord?.Picture != null)
+            {
+                byteArray = SelectedWord.Picture;
+            }
+            else
+            {
+                FileStream file = new FileStream(_imgLoc, FileMode.Open, FileAccess.Read);
+                BinaryReader binaryReader = new BinaryReader(file);
+                byteArray = binaryReader.ReadBytes((int)file.Length);
+            }
+
+            return byteArray;
         }
 
         private void SVGLoad()

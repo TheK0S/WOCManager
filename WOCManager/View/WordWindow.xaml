@@ -129,8 +129,8 @@
                 <StackPanel>
                     <Button Content="Изображение" Command="{Binding AddPictureCommand}" Margin="0 20 0 45"/>
                     <Button Content="Добавить" Command="{Binding AddWordCommand}" Width="130" Margin="0 0 0 20"/>
-                    <Button Content="Редактировать" Width="130" Margin="0 0 0 20"/>
-                    <Button Content="Удалить" Width="130"/>
+                    <Button Content="Изменить" Command="{Binding UpdateWordCommand}" Width="130" Margin="0 0 0 20"/>
+                    <Button Content="Удалить" Command="{Binding RemoveWordCommand}" Width="130"/>
                 </StackPanel>
             </StackPanel>            
             
