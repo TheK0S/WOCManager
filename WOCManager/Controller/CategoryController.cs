@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using WOCManager.Model;
 using WOCManager.View;
 
@@ -100,24 +101,24 @@ namespace WOCManager.Controller
                     {
                         await Task.Run(() =>
                         {
-                            if (CategoryName != null && SelectedLevel != null)
+                            if (CategoryName is null || SelectedLevel is null)
                             {
-                                var newCategory = new Category { LevelsId = SelectedLevel.Id, CategoriesName = CategoryName };
+                                MessageBox.Show("Не заполнены поля для добавления категории", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                            
+                            var newCategory = new Category { LevelsId = SelectedLevel.Id, CategoriesName = CategoryName };
 
-                                if (SelectedCategory is null || (SelectedCategory is not null && SelectedCategory != newCategory))
-                                {
-                                    CategoryData.CreateCategory(newCategory);
-                                    Categories = CategoryData.GetCategories();                                    
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Категория уже существует", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                                }
+                            if (SelectedCategory is null || (SelectedCategory is not null && SelectedCategory != newCategory))
+                            {
+                                CategoryData.CreateCategory(newCategory);
+                                Categories = CategoryData.GetCategories();
                             }
                             else
                             {
-                                MessageBox.Show("Не заполнены поля для добавления категории", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show("Категория уже существует", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
+
                         });
                     }));
             }
@@ -130,24 +131,28 @@ namespace WOCManager.Controller
                 return _updateCategory ??
                     (_updateCategory = new RelayCommand(async obj =>
                     {
+                        if (MessageBox.Show("Будет создана новая таблица и все поля текущей, будут скопированы в новую. После чего текущая будет удалена.\n\t\tВы уверены?", 
+                            "Внимание!", MessageBoxButton.YesNo) == MessageBoxResult.No) 
+                            return;                   
+
                         await Task.Run(() =>
                         {
-                            if (CategoryName != null && SelectedLevel != null && SelectedCategory is not null)
-                            {
-                                var newCategory = new Category { LevelsId = SelectedLevel.Id, CategoriesName = CategoryName };
-
-                                if(SelectedCategory != newCategory)
-                                {
-                                    CategoryData.UpdateCategory(newCategory, SelectedCategory);
-                                    Categories = CategoryData.GetCategories();
-                                }                                    
-                                else
-                                    MessageBox.Show("Нет изменений для сохранения. Внесите изменения в поля категории и попробуйте снова", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                            else
+                            if (CategoryName is null || SelectedLevel is null || SelectedCategory is null)
                             {
                                 MessageBox.Show("Не заполнены поля для изменения категории", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
                             }
+
+                            var newCategory = new Category { LevelsId = SelectedLevel.Id, CategoriesName = CategoryName };
+
+                            if (SelectedCategory == newCategory)
+                            {
+                                MessageBox.Show("Нет изменений для сохранения. Внесите изменения в поля категории и попробуйте снова", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                                
+                            CategoryData.UpdateCategory(newCategory, SelectedCategory);
+                            Categories = CategoryData.GetCategories();    
                         });
                     }));
             }
@@ -162,17 +167,17 @@ namespace WOCManager.Controller
                     {
                         await Task.Run(() =>
                         {
-                            if (SelectedCategory is not null)
-                            {
-                                if(MessageBox.Show("Удаление категории приведет к потере всех слов добавленных в категорию.\n\t\t\tВы уверены?", "Внимание!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                                {
-                                    CategoryData.RemoveCategory(SelectedCategory);
-                                    Categories = CategoryData.GetCategories();
-                                }
-                            }
-                            else
+                            if (SelectedCategory is null)
                             {
                                 MessageBox.Show("Не выбрана категория для удаления", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+
+                            if (MessageBox.Show("Удаление категории приведет к потере всех слов добавленных в категорию.\n\t\t\tВы уверены?", "Внимание!",
+                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            {
+                                CategoryData.RemoveCategory(SelectedCategory);
+                                Categories = CategoryData.GetCategories();
                             }
                         });
                     }));
@@ -183,7 +188,7 @@ namespace WOCManager.Controller
         {
             Categories = CategoryData.GetCategories();
             FilteredCategories = Categories;
-            Levels = CategoryData.GetLevels();
+            Levels = CategoryData.GetLevels();            
         }
 
         private void ApplyFilter()

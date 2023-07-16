@@ -245,6 +245,9 @@ namespace WOCManager.Controller
                 return _updateWordCommand ??
                     (_updateWordCommand = new RelayCommand(async obj =>
                     {
+                        if (MessageBox.Show("Вы уверены что хотите сохранить изменения в слове?", "Внимание", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                            return;
+
                         if (SelectedWordCategory is null || SelectedWord is null)
                         {
                             MessageBox.Show("Не выбрана категория или слово для изменения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);

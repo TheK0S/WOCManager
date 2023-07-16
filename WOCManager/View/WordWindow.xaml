@@ -43,17 +43,14 @@
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="#FF9B47AF"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="border" Padding="5" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="15">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#FF7E2288"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
+                        </Border>                        
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -107,9 +104,10 @@
         
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="20 0" Height="20">
             <TextBlock Text="Категория" Margin="0 0 20 0" Style="{StaticResource labelTextBlock}"/>
-            <ComboBox Width="300" ItemsSource="{Binding WordCategories}" SelectedItem="{Binding SelectedWordCategory}">
+            <ComboBox Width="300" ItemsSource="{Binding WordCategories}" SelectedItem="{Binding SelectedWordCategory}" Cursor="Hand">
                 <ComboBox.ItemContainerStyle>
                     <Style TargetType="ComboBoxItem">
+                        <Setter Property="Cursor" Value="Hand"/>
                         <Setter Property="Background">
                             <Setter.Value>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -145,28 +143,28 @@
                 <Image Source="{Binding SelectedByteArray, Converter={StaticResource ByteArrayToBitmapSourceConverter}}" 
                        Height="250" Width="250" Margin="0 20 25 0"/>
                 <StackPanel>
-                    <Button  Command="{Binding AddPictureCommand}" Margin="0 20 0 45">
-                        <StackPanel Orientation="Horizontal">
+                    <Button  Command="{Binding AddPictureCommand}" Width="130" Margin="0 20 0 45">
+                        <StackPanel Orientation="Horizontal" Width="120">
                             <Image Source="/Image/add-file-32.png" Margin="0 0 10 0" Height="25"/>
                             <TextBlock Text="Картинка" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button Command="{Binding AddWordCommand}" Width="130" Margin="0 0 0 20" IsDefault="True">
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Width="120">
                             <Image Source="/Image/plus-5-32.png" Margin="0 0 10 0" Height="25"/>
                             <TextBlock Text="Добавить" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button Command="{Binding UpdateWordCommand}" Width="130" Margin="0 0 0 20">
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Width="120">
                             <Image Source="/Image/edit-8-32.png" Margin="0 0 10 0" Height="25"/>
                             <TextBlock Text="Изменить" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button Command="{Binding RemoveWordCommand}" Width="130">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Image/x-mark-4-32.png" Margin="0 0 10 0" Height="25"/>
-                            <TextBlock Text="Удалить" VerticalAlignment="Center" Margin="0 0 12 0"/>
+                        <StackPanel Orientation="Horizontal" Width="120">
+                            <Image Source="/Image/x-mark-4-32.png" Margin="0 0 15 0" Height="25"/>
+                            <TextBlock Text="Удалить" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -197,6 +195,7 @@
             </DataGrid.Resources>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
+                    <Setter Property="Cursor" Value="Hand"/>
                     <Setter Property="Background">
                         <Setter.Value>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

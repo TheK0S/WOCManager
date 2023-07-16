@@ -16,6 +16,7 @@
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="#FF9B47AF"/>
             <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -76,9 +77,10 @@
 
         <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="20" >
             <TextBlock Text="Уровень языка" Foreground="White"/>
-            <ComboBox ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel}">
+            <ComboBox ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel}" Cursor="Hand">
                 <ComboBox.ItemContainerStyle>
                     <Style TargetType="ComboBoxItem">
+                        <Setter Property="Cursor" Value="Hand"/>
                         <Setter Property="Background">
                             <Setter.Value>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -96,9 +98,24 @@
             </ComboBox>
             <TextBlock Text="Название категории" Foreground="White" Margin="0 10 0 0"/>
             <TextBox Text="{Binding CategoryName}" Margin="0 0 0 10"/>
-            <Button Content="Добавить" Command="{Binding AddCategory}"/>
-            <Button Content="Изменить" Command="{Binding UpdateCategory}"/>
-            <Button Content="Удалить" Command="{Binding RemoveCategory}"/>
+            <Button Command="{Binding AddCategory}" Width="130" IsDefault="True">
+                <StackPanel Orientation="Horizontal" Width="120">
+                    <Image Source="/Image/plus-5-32.png" Margin="0 0 10 0" Height="25"/>
+                    <TextBlock Text="Добавить" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding UpdateCategory}" Width="130">
+                <StackPanel Orientation="Horizontal" Width="120">
+                    <Image Source="/Image/edit-8-32.png" Margin="0 0 10 0" Height="25"/>
+                    <TextBlock Text="Изменить" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding RemoveCategory}" Width="130">
+                <StackPanel Orientation="Horizontal" Width="120">
+                    <Image Source="/Image/x-mark-4-32.png" Margin="0 0 15 0" Height="25"/>
+                    <TextBlock Text="Удалить" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
 
         <DataGrid Grid.Row="2" Grid.Column="1" Margin="10"
@@ -122,6 +139,7 @@
             </DataGrid.Resources>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
+                    <Setter Property="Cursor" Value="Hand"/>
                     <Setter Property="Background">
                         <Setter.Value>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
