@@ -15,6 +15,7 @@
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="#FF9B47AF"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">

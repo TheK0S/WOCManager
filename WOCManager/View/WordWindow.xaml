@@ -145,10 +145,30 @@
                 <Image Source="{Binding SelectedByteArray, Converter={StaticResource ByteArrayToBitmapSourceConverter}}" 
                        Height="250" Width="250" Margin="0 20 25 0"/>
                 <StackPanel>
-                    <Button Content="Изображение" Command="{Binding AddPictureCommand}" Margin="0 20 0 45"/>
-                    <Button Content="Добавить" Command="{Binding AddWordCommand}" Width="130" Margin="0 0 0 20"/>
-                    <Button Content="Изменить" Command="{Binding UpdateWordCommand}" Width="130" Margin="0 0 0 20"/>
-                    <Button Content="Удалить" Command="{Binding RemoveWordCommand}" Width="130"/>
+                    <Button  Command="{Binding AddPictureCommand}" Margin="0 20 0 45">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Image/add-file-32.png" Margin="0 0 10 0" Height="25"/>
+                            <TextBlock Text="Картинка" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding AddWordCommand}" Width="130" Margin="0 0 0 20" IsDefault="True">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Image/plus-5-32.png" Margin="0 0 10 0" Height="25"/>
+                            <TextBlock Text="Добавить" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding UpdateWordCommand}" Width="130" Margin="0 0 0 20">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Image/edit-8-32.png" Margin="0 0 10 0" Height="25"/>
+                            <TextBlock Text="Изменить" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding RemoveWordCommand}" Width="130">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Image/x-mark-4-32.png" Margin="0 0 10 0" Height="25"/>
+                            <TextBlock Text="Удалить" VerticalAlignment="Center" Margin="0 0 12 0"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </StackPanel>            
             
