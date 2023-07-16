@@ -63,7 +63,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="250"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
@@ -74,7 +74,7 @@
             </StackPanel>
         </Border>
 
-        <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="20">
+        <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="20" >
             <TextBlock Text="Уровень языка" Foreground="White"/>
             <ComboBox ItemsSource="{Binding Levels}" SelectedItem="{Binding SelectedLevel}">
                 <ComboBox.ItemContainerStyle>
@@ -94,7 +94,7 @@
                     </Style>
                 </ComboBox.ItemContainerStyle>
             </ComboBox>
-            <TextBlock Text="Название категории" Foreground="White"/>
+            <TextBlock Text="Название категории" Foreground="White" Margin="0 10 0 0"/>
             <TextBox Text="{Binding CategoryName}" Margin="0 0 0 10"/>
             <Button Content="Добавить" Command="{Binding AddCategory}"/>
             <Button Content="Изменить" Command="{Binding UpdateCategory}"/>
