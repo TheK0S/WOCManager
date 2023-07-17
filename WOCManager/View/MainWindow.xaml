@@ -118,10 +118,10 @@
             <TextBlock Grid.Column="0" Text="Главное меню" Foreground="#3A4E7A" FontSize="16" Margin="10 0 0 0" FontFamily="Comic Sans MS" FontWeight="Bold"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Command="{Binding MinimizeWindow}" Style="{StaticResource taskBarMinimizeBtn}">
-                    <Image Source="/Image/minimize-48.png" Height="17"/>
+                    <Image Source="/Image/minimize-48.png" Height="22"/>
                 </Button>
                 <Button Command="{Binding CloseWindow}" Style="{StaticResource taskBarCloseBtn}">
-                    <Image Source="/Image/close-48.png" Height="17"/>                    
+                    <Image Source="/Image/close-48.png" Height="22"/>                    
                 </Button>
             </StackPanel>
         </Grid>
