@@ -10,12 +10,11 @@
   <ItemGroup>
     <None Remove="Image\add-file-32.png" />
     <None Remove="Image\available-updates-24.png" />
-    <None Remove="Image\default_picture.png" />
-    <None Remove="Image\edit-2-32.png" />
+    <None Remove="Image\close-48.png" />
     <None Remove="Image\edit-8-32.png" />
     <None Remove="Image\Group 32.png" />
+    <None Remove="Image\minimize-48.png" />
     <None Remove="Image\plus-5-32.png" />
-    <None Remove="Image\plus-8-32.png" />
     <None Remove="Image\search.png" />
     <None Remove="Image\x-mark-4-32.png" />
     <None Remove="View\default_picture.png" />
@@ -31,12 +30,11 @@
   <ItemGroup>
     <Resource Include="Image\add-file-32.png" />
     <Resource Include="Image\available-updates-24.png" />
-    <Resource Include="Image\default_picture.png" />
-    <Resource Include="Image\edit-2-32.png" />
+    <Resource Include="Image\close-48.png" />
     <Resource Include="Image\edit-8-32.png" />
     <Resource Include="Image\Group 32.png" />
+    <Resource Include="Image\minimize-48.png" />
     <Resource Include="Image\plus-5-32.png" />
-    <Resource Include="Image\plus-8-32.png" />
     <Resource Include="Image\search.png" />
     <Resource Include="Image\x-mark-4-32.png" />
   </ItemGroup>

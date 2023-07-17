@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WOCManager.View"
         xmlns:controller="clr-namespace:WOCManager.Controller"
         mc:Ignorable="d"
-        Title="CategoryWindow" Height="450" Width="800">
+        Title="CategoryWindow" Height="450" Width="800" Icon="/Image/Group 32.png">
     <Window.Resources>
         <controller:LevelIdToLevelNameConverter x:Key="LevelIdToLevelNameConverter"/>
                 

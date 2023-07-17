@@ -27,5 +27,10 @@ namespace WOCManager
 
             DataContext = new MainWindowController();
         }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
     }
 }

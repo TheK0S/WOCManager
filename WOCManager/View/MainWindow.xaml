@@ -5,9 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WOCManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Window.Resources>
-            <Style TargetType="Button">
+        Title="MainWindow" Height="470" Width="800" WindowStyle="None" Icon="/Image/Group 32.png" ResizeMode="NoResize">
+    <Window.Resources>        
+        <Style x:Key="taskBarCloseBtn" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="#3A4E7A"/>
+            <Setter Property="Width" Value="25"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Padding="0" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="Red"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="taskBarMinimizeBtn" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="#3A4E7A"/>
+            <Setter Property="Width" Value="25"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Margin" Value="2 2 5 2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Padding="0" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="gainsboro"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style TargetType="Button">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="Foreground" Value="#c2d2e9"/>
             <Setter Property="Background" Value="#FF9B47AF"/>
@@ -60,17 +104,33 @@
             </LinearGradientBrush>
         </Grid.Background>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
             <RowDefinition Height="90"/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <Image x:Name="image" Grid.Row="0" Source="/Image/Group 32.png"/>
-        <TextBlock x:Name="textBlock" Grid.Row="1" Text="Manager"
+        <Grid Grid.Row="0" MouseDown="Grid_MouseDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="62"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Главное меню" Foreground="#3A4E7A" FontSize="16" Margin="10 0 0 0" FontFamily="Comic Sans MS" FontWeight="Bold"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Command="{Binding MinimizeWindow}" Style="{StaticResource taskBarMinimizeBtn}">
+                    <Image Source="/Image/minimize-48.png" Height="17"/>
+                </Button>
+                <Button Command="{Binding CloseWindow}" Style="{StaticResource taskBarCloseBtn}">
+                    <Image Source="/Image/close-48.png" Height="17"/>                    
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Image x:Name="image" Grid.Row="1" Source="/Image/Group 32.png"/>
+        <TextBlock x:Name="textBlock" Grid.Row="2" Text="Manager"
                    TextAlignment="Center" Foreground="#c2d2e9"
                    FontSize="60" FontFamily="Comic Sans MS" FontWeight="Bold"
-                   Opacity="0"/>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                   Opacity="0.01"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Content="Категории" Command="{Binding AddCategoryWindow}"/>
             <Button Content="Слова" Command="{Binding AddWordWindow}"/>
         </StackPanel>

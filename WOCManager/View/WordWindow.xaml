@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WOCManager.View"
         xmlns:controller="clr-namespace:WOCManager.Controller"
         mc:Ignorable="d"
-        Title="WordWindow" Height="600" Width="1200">
+        Title="WordWindow" Height="600" Width="1200" Icon="/Image/Group 32.png">
     <Window.Resources>
         <controller:ByteArrayToBitmapSourceConverter x:Key="ByteArrayToBitmapSourceConverter"/>
         <Style x:Key="labelTextBlock" TargetType="TextBlock">
